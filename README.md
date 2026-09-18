@@ -1,58 +1,198 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ServiceFlow
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+ServiceFlow is a small-business auto-detailing management platform built with the TALL stack. The current implementation includes the public marketing website, service catalog, packages and promotions, contact form UI, and business information pages. Customer, staff, and admin operations will be added in later phases.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Laravel 13** — application framework and backend
+- **Livewire 4** — server-driven interactive components
+- **Alpine.js** — lightweight browser interactions, bundled with Livewire
+- **Tailwind CSS 4** — CSS-first styling through the Vite plugin
+- **Vite 8** — frontend development server and production asset bundler
+- **PHP 8.3+**
+- **SQLite** — default local database
+- **PHPUnit 12** — automated testing
+- **Laravel Pint** — PHP code formatting
+- **Docker and Apache** — Render deployment
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Install the following before setting up the project:
 
-## Learning Laravel
+- PHP 8.3 or later with the extensions required by Laravel
+- Composer 2
+- Node.js 20 or later
+- npm 10 or later
+- Git
+- SQLite
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Optional:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Docker Desktop, for testing the production container locally
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Verify the main tools:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php -v
+composer -V
+node -v
+npm -v
+git --version
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Local Setup
 
-## Contributing
+The recommended project location is `~/Sites/serviceflow`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1. Clone the repository
 
-## Code of Conduct
+```bash
+mkdir -p ~/Sites
+git clone git@github.com:jlcdev-org/detailing-proj.git ~/Sites/serviceflow
+cd ~/Sites/serviceflow
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+If the repository already exists locally, enter it and pull the latest changes:
 
-## Security Vulnerabilities
+```bash
+cd ~/Sites/serviceflow
+git pull origin main
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Install dependencies
 
-## License
+```bash
+composer install
+npm install
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3. Create the environment file
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+The default environment uses SQLite. Create the local database file:
+
+```bash
+mkdir -p database
+touch database/database.sqlite
+```
+
+### 4. Run migrations
+
+```bash
+php artisan migrate
+```
+
+### 5. Start development
+
+Run Laravel and Vite together:
+
+```bash
+composer run dev
+```
+
+Alternatively, run them in separate terminals:
+
+```bash
+php artisan serve
+```
+
+```bash
+npm run dev
+```
+
+The application is available at `http://127.0.0.1:8000` by default.
+
+## Production Build
+
+Compile optimized frontend assets:
+
+```bash
+npm run build
+```
+
+For a production environment, configure at least:
+
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://your-domain.example
+```
+
+Generate a unique application key with `php artisan key:generate`. Never commit the generated `.env` file or production secrets.
+
+## Verification
+
+Run the automated tests:
+
+```bash
+php artisan test --compact
+```
+
+Build the frontend assets:
+
+```bash
+npm run build
+```
+
+Format modified PHP files:
+
+```bash
+vendor/bin/pint --dirty --format agent
+```
+
+Inspect application routes:
+
+```bash
+php artisan route:list --except-vendor
+```
+
+## Public Routes
+
+| Page | Path |
+| --- | --- |
+| Home | `/` |
+| Services | `/services` |
+| Packages | `/packages` |
+| About | `/about` |
+| Contact | `/contact` |
+
+## Render Deployment
+
+The repository includes:
+
+- `Dockerfile`
+- `docker-entrypoint.sh`
+- `render.yaml`
+- `.dockerignore`
+
+To deploy with Render:
+
+1. Sign in to Render and create a new Blueprint.
+2. Connect `jlcdev-org/detailing-proj`.
+3. Allow Render to read `render.yaml`.
+4. Review the production environment variables.
+5. Deploy the web service.
+
+The entrypoint configures Apache for Render's assigned port, prepares Laravel, runs migrations, and starts the web server.
+
+> Render's filesystem is ephemeral. SQLite is suitable for the current public-site phase, but persistent customer, booking, payroll, and inventory data should use a managed PostgreSQL database before those features go to production.
+
+## Project Structure
+
+```text
+app/                         Laravel application code
+resources/css/app.css        Tailwind CSS theme and application styles
+resources/js/app.js          Frontend JavaScript entry point
+resources/views/components/  Shared Blade components and public layout
+resources/views/public/      Public website pages
+routes/web.php               Public web routes
+tests/                       PHPUnit test suite
+```
+
+## Repository
+
+GitHub: `git@github.com:jlcdev-org/detailing-proj.git`
